@@ -1,0 +1,147 @@
+---
+title: "RExercise#2_Fantilanan.Rmd"
+author: "Glen Mark F. Fantilanan"
+date: "2026-09-30"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+
+a <- 17
+b <- 5
+
+print(a + b)
+print(a - b)
+print(a * b)
+print(a / b)
+
+
+print(a %% b)
+print(a %/% b)
+
+print(2 ^ 10)
+```
+---
+(a / b) exactly divides them which gives 3.4, (a %% b) which gives the remaining number of 17 which is 2 and (a %/% b) gives exactly the same number of 3 
+Yes, both predictions were correct 10 %% 3 = 1 and 10 %/% 3 = 3
+---
+```{r}
+x <- 42
+y <- 42L
+z <- "42"
+w <- TRUE
+v <- 3 + 21
+
+cat("\n=== TYPE ===\n")
+print(typeof(x))
+print(typeof(y))
+print(typeof(z))
+print(typeof(w))
+print(typeof(v))
+
+cat("\n=== CLASS ===\n")
+print(class(x))
+print(class(y))
+print(class(z))
+print(class(w))
+print(class(v))
+
+cat("\n=== MODE ===\n")
+print(mode(x))
+print(mode(y))
+print(mode(z))
+print(mode(w))
+print(mode(v))
+
+```
+---
+x and y both contain the number 42, the 42 is treated as a double, while the L in 42L tells R that it should be an integer because it has a special suffix for letter "L"
+
+Yes, they can be different. For example, x has a typeof() of "double", but its class() and mode() are "numeric". This is because the three functions describe the object in different ways. For a matrix or factor, I would also expect them to give different results because a matrix or factor has its own class.
+---
+```{r}
+num_string <- "123"
+
+num <- as.numeric(num_string)
+
+
+cat("\n=== NUMERIC ===\n")
+print(num)
+print(typeof(num))
+print(class(num))
+print(mode(num))
+
+cat("\n=== TRUE OR FALSE -LOGICAL- ===\n")
+print(as.logical(0))
+print(as.logical(1))
+
+cat("\n=== CONVERT ===\n")
+bad_string <- "hello123"
+
+print(as.numeric(bad_string))
+
+
+
+```
+---
+I think R gives a warning because the conversion is not completely impossible for the program to continue. It gives NA for the value that cannot be converted and warns us that something went wrong.
+
+
+The problem is that I might not notice that a value became NA. This could cause wrong results in later calculations without me realizing that something went wrong.
+
+
+as.logical(2)
+# TRUE
+
+as.logical(-1)
+# TRUE
+
+R seems to treat 0 as FALSE and any non-zero number as TRUE. That is why both 2 and -1 become TRUE.
+---
+```{r}
+first_name <- "Juan"
+last_name <- "Dela Cruz"
+
+cat("\n=== 1 ===\n")
+print(first_name)
+print(last_name)
+
+cat("\n=== 2 ===\n")
+full_name <- paste(first_name, last_name)
+print(full_name)
+
+full_name2 <- paste0(first_name, last_name)
+print(full_name2)
+
+cat("\n=== 3 ===\n")
+full_name3 <- paste(first_name, last_name, sep = "")
+print(full_name3)
+
+cat("\n=== 4 ===\n")
+age <- 21
+
+sentence <- paste0(first_name, " ", last_name, " is ", age, " years old.")
+print(sentence)
+
+```
+---
+paste() and paste0() are different because paste() uses a space between the strings by default. paste0() does not use a separator, so it puts the strings directly beside each other.
+
+No, it did not cause an error. paste0() can combine numbers and text together. It automatically converts the number age into a character when joining it with the other strings. This is similar to the type conversion we practiced in Part C because the number is changed into text when it is combined with the character strings.
+---
+```{r}
+cat("\n=== fix ===\n")
+print(as.numeric("5") + 5)
+
+print("5" + 5)
+
+```
+---
+I think R requires an explicit conversion because it does not want to guess what the programmer means. A value like "5" is a character, even though it looks like a number. Converting it first makes it clear that we want R to treat it as a number.
+
+The numbers were probably read from the text file as characters instead of numeric values. I would first check the data using typeof(), class(), or mode() to see what type it is. If it is character, I would convert it using something like as.numeric(). I would also check for warnings or values that are not actually numbers, because those could cause problems when using sum().
+---
+I learned that R treats different types of data differently, such as numbers, characters, logical values, and integers. I also learned that typeof(), class(), and mode() can help identify what type of data I am working with. Understanding data types is important because I may need to convert the data before doing calculations or combining different values. This can help prevent errors in my code.
+---
