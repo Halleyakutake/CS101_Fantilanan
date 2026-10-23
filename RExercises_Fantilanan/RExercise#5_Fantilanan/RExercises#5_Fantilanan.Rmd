@@ -1,0 +1,313 @@
+---
+title: "RExercise#5_Fantilanan"
+author: "Glen Mark F. Fantilanan"
+date: "2026-10-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# TODO: Create a 3x3 matrix called m1 containing the numbers 1 to 9,
+# using matrix(1:9, nrow = 3, ncol = 3)
+# Print m1
+
+# Create a 3x3 matrix called m1 containing the numbers 1 to 9
+m1 <- matrix(1:9, nrow = 3, ncol = 3)
+
+# Print m1
+print(m1)
+```
+
+```{r}
+# TODO: Create a second 3x3 matrix called m2 with the SAME numbers 1:9,
+# but this time add the argument byrow = TRUE
+# Print m2 and compare it to m
+
+# Create m2 with the same numbers, filled row by row
+m2 <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)
+
+# Print m2
+print(m2)
+
+# Compare to m1
+print(m1)
+
+
+
+```
+
+```{r}
+scores <- matrix(c(88, 92, 79, 95, 84, 90), nrow = 2, ncol = 3, byrow = TRUE)
+rownames(scores) <- c("Quiz1", "Quiz2")
+colnames(scores) <- c("Ana", "Ben", "Cid")
+
+# TODO: Print scores and confirm the row/column names were applied
+
+# Print scores and confirm the row/column names were applied
+print(scores)
+
+# Confirm the names directly
+rownames(scores)
+colnames(scores)
+dimnames(scores)
+
+
+
+```
+#Question 1:
+#    Compare m1 and m2 above. Both were built from 1:9 with nrow = 3, ncol = 3, but they look different.
+#    Explain exactly what byrow = TRUE changes about how R fills a matrix.
+#ANSWER:
+#Both matrices use the same numbers, 1 to 9, in a 3x3 grid. The only difference is the order R fills them in.
+
+#m1 (default): R fills down the columns, so 1, 2, 3 go in column 1.
+#m2 (byrow = TRUE): R fills across the rows, so 1, 2, 3 go in row 1.
+#So byrow = TRUE just tells R to fill the grid like reading a book, left to right, then the next line. The numbers and the size stay the same, only the placement changes.
+
+
+#Question #2
+
+#    If you tried matrix(1:8, nrow = 3, ncol = 3) (only 8 numbers for 9 slots), what do you think would happen?
+#    Test it and explain the result, including any warning message.
+#ANSWER:
+#matrix(1:8, nrow = 3, ncol = 3) has 9 slots but only 8 values. R doesn’t stop with an error. It recycles the vector, so the last slot gets a 1 from the start. R also prints a warning that the data length (8) doesn’t divide evenly into the matrix size, which signals the result may not be what you intended.
+```{r}
+# Using scores from Part A:
+
+# TODO: Access the single value in row 1, column 2 using scores[1, 2]
+
+# TODO: Access the entire first row using scores[1, ]
+
+# TODO: Access the entire "Ben" column using scores[, "Ben"]
+
+# Single value in row 1, column 2
+scores[1, 2]
+
+# Entire first row
+scores[1, ]
+
+# Entire "Ben" column
+scores[, "Ben"]
+```
+
+```{r}
+# TODO: Return only the values in scores that are greater than or equal
+# to 90 (hint: scores[scores >= 90] -- note the result loses its shape)
+
+# Values in scores that are greater than or equal to 90
+scores[scores >= 90]
+```
+#Question #3
+
+#    scores[1, ] and scores[, "Ben"] both return a result, but one represents a row and the other a column.
+#    Run class() on each result. What data structure does R “downgrade” a single row/column of a matrix to, and why do you think R does this automatically?
+#ANSWER:
+#class() shows both scores[1, ] and scores[, "Ben"] are plain numeric vectors. R drops a single row or column to a 1D vector because it only has one dimension, and a vector is simpler to use with functions like sum() or mean(). Use drop = FALSE to keep the matrix shape.
+
+
+#Question #4
+
+#    In the matrix-logical chunk, the row/column names disappeared from your result. * Why does subsetting with a logical condition (scores >= 90) lose the 2D shape and names thatscores[1, ] kept?
+#ANSWER:
+#scores[scores >= 90] picks individual cells that can come from scattered positions, so they don’t form a rectangle. R can’t rebuild rows and columns from them, so it returns a plain vector. The names are lost because each value would need two labels (row and column), and a vector can hold only one label per element. A full row like scores[1, ] keeps its names because the values still line up along one dimension.
+```{r}
+# TODO: Use dim(), nrow(), and ncol() on scores to report its dimensions
+
+# Dimensions of scores
+dim(scores)
+nrow(scores)
+ncol(scores)
+
+# TODO: Use t() to transpose scores and store it as scores_t
+# Print scores_t and compare its dimensions to scores using dim()
+
+# Transpose scores
+scores_t <- t(scores)
+print(scores_t)
+
+# Compare dimensions
+dim(scores)
+dim(scores_t)
+
+```
+
+```{r}
+a <- matrix(1:4, nrow = 2)
+b <- matrix(5:8, nrow = 2)
+
+# TODO: Add a and b element-wise (a + b)
+# TODO: Multiply a and b element-wise (a * b)
+
+# Element-wise addition
+a + b
+
+# Element-wise multiplication
+a * b
+
+```
+
+```{r}
+
+# TODO: Perform true matrix multiplication of a and b using %*%
+# Compare this result to a * b above -- they should be different
+
+# True matrix multiplication
+a %*% b
+
+# Element-wise multiplication, for comparison
+a * b
+
+```
+#Question #5
+
+#    a * b and a %*% b both “multiply” the same two matrices but give different results.
+#    Explain the difference between element-wise multiplication and matrix multiplication in your own words.
+#ANSWER:
+#a * b is element-wise: it multiplies only the numbers in matching positions, so the result keeps the same shape (5, 21, 12, 32). a %*% b is true matrix multiplication: each cell takes a whole row of a, multiplies it with a whole column of b, and adds the products (e.g. 23 = 1×5 + 3×6). That is why the results differ.
+
+
+#Question #6
+
+#    t(scores) swaps rows and columns. Look at dim(scores) versus dim(scores_t).
+#    Why must the row/column names also swap positions when you transpose a matrix?
+#ANSWER:
+#Names are labels for the data they describe, so they must travel with it. Transposing turns rows into columns and columns into rows, so the row names (quizzes) become column names and the column names (students) become row names. This also fits the new dimensions: scores_t is 3 x 2, so it needs 3 row names and 2 column names, and each value stays labelled correctly (88 is still Quiz1 and Ana).
+```{r}
+# TODO: A new student "Dex" scored 85 on Quiz1 and 91 on Quiz2.
+# Use cbind() to add a new column to scores called Dex with
+# these two values. Store the result as scores_v2 and print it.
+
+# Add Dex as a new column
+scores_v2 <- cbind(scores, Dex = c(85, 91))
+print(scores_v2)
+
+```
+
+```{r}
+# TODO: A new quiz "Quiz3" was given with scores 80, 88, 93 for
+# Ana, Ben, Cid (use only the original 3 students, not Dex).
+# Use rbind() to add this as a new row to scores. Store as scores_v3
+# and print it.
+
+# Add Quiz3 as a new row (original 3 students only)
+scores_v3 <- rbind(scores, Quiz3 = c(80, 88, 93))
+print(scores_v3)
+
+```
+#Question #7 * What would happen if you tried cbind(scores, c(85, 91, 100)) — giving 3 values for a matrix that only has 2 rows? * Test it, read the warning/error, and explain why cbind() and rbind()) require matching dimensions.
+#ANSWER:
+#cbind(scores, c(85, 91, 100)) does not stop with an error. My first output block above showing an error was wrong. R gives a warning (number of rows of result is not a multiple of vector length) and quietly drops the extra value, so the new column holds only 85 and 91 and the 100 is lost. The new column also has no name. cbind() and rbind() need matching dimensions because a matrix is a rectangle: every column must have the same number of rows, and every row the same number of columns. Otherwise R has to guess which values to drop or recycle, and values could end up under the wrong labels.
+
+
+#Question #8
+
+#    In what situation would you use rbind() instead of cbind() when updating a dataset over time?
+#    Give a concrete example (e.g., daily sales, weekly attendance) and explain your reasoning.
+#ANSWER:
+#Use rbind() when new data arrives as new records and the columns stay the same. For example, if each column is a product (Apples, Bananas, Cherries) and each row is a day, each new day adds one row with rbind(sales, Tuesday = c(120, 85, 40)). Use cbind() when you add a new variable for the same records, such as a new product or a new student like Dex.
+
+```{r}
+# TODO: Create a 2x3x2 array called arr using:
+# array(1:12, dim = c(2, 3, 2))
+# Print arr and observe how it displays as two separate 2x3 "slices"
+
+# Create a 2x3x2 array
+arr <- array(1:12, dim = c(2, 3, 2))
+
+# Print arr
+print(arr)
+
+```
+
+```{r}
+# TODO: Access the element in row 1, column 2, of the SECOND layer
+# (slice) of arr, e.g. arr[1, 2, 2]
+
+# TODO: Access the entire first layer (slice) of arr using arr[ , , 1]
+
+# Create a 2x3x2 array
+arr <- array(1:12, dim = c(2, 3, 2))
+
+# Print arr
+print(arr)
+
+```
+
+```{r}
+
+# TODO: Access the element in row 1, column 2, of the SECOND layer
+# (slice) of arr, e.g. arr[1, 2, 2]
+
+# TODO: Access the entire first layer (slice) of arr using arr[ , , 1]
+
+# Row 1, column 2, second layer
+arr[1, 2, 2]
+
+# Entire first layer
+arr[ , , 1]
+```
+
+```{r}
+# TODO: Use dim() on arr to confirm its dimensions
+
+# Confirm the dimensions of arr
+dim(arr)
+
+```
+#Question #9
+
+#    A matrix needs 2 indices (scores[row, col]) but an array needs 3 (arr[row, col, layer]).
+#    Using dim(arr), explain in your own words what each of the three numbers represents.
+#ANSWER:
+#The three numbers in dim(arr) (2, 3, 2) are the sizes of each dimension, in the same order as the indices in arr[row, col, layer]. The first is the number of rows, the second the number of columns, and the third the number of layers (stacked 2x3 slices). Multiplying them (2 × 3 × 2 = 12) gives the total number of elements.
+
+
+#Question #10
+
+#    Give a real-world example of data that would naturally fit a 3D array structure (hint: think of something that has rows, columns, AND a third repeating dimension like time, subjects, or categories).
+
+#    Explain why a single 2D matrix would not be enough.
+#ANSWER:
+#Quiz scores across several terms fit a 3D array: rows are quizzes, columns are students, and layers are terms. For example, scores_array[2, 1, 3] means Ana’s score on Quiz2 in Term3. A single 2D matrix can only hold two directions, so you would have to merge two ideas into one label (like “Term1-Quiz1”), which makes it harder to select all of one student’s scores or compare terms. A 3D array keeps each idea on its own axis.
+```{r}
+class_a <- matrix(c(85, 90, 78, 92), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S1", "S2"), c("Midterm", "Final")))
+class_b <- matrix(c(88, 84, 95, 91), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S3", "S4"), c("Midterm", "Final")))
+
+# TODO: Combine class_a and class_b into one matrix called all_students
+# using the correct bind function (think about whether these represent
+# new STUDENTS or new SCORE COLUMNS before choosing cbind or rbind)
+
+# Combine the two classes: new students means new rows
+all_students <- rbind(class_a, class_b)
+print(all_students)
+
+```
+
+```{r}
+# TODO: From all_students, compute each student's average score across
+# Midterm and Final. Hint: rowMeans(all_students) does this in one line.
+
+# Average score for each student across Midterm and Final
+rowMeans(all_students)
+
+```
+#Question #11
+
+#    Explain WHY you chose cbind() or rbind() in challenge-1.
+#    What clue in the data (shared row names vs. shared column names) told you which function was correct?
+
+#I chose rbind() because S3 and S4 are new students, and each student is a row. The clue was the names: both matrices share the same column names (Midterm, Final) but have different row names (S1, S2 versus S3, S4), so they measure the same things on different people and should be stacked. Shared row names with different column names would call for cbind().
+
+
+#Question #12
+
+#    Suppose instead of 2 classes you had 5 classes, each recorded as a separate matrix with the same 2 columns (Midterm, Final).
+#    Describe, in plain language (no code required), how you would combine all 5 into a single matrix, and how you would check your final result is correct using dim().
+
+#I would stack all five matrices one under another, making sure each has the same two columns in the same order. To check with dim(), the number of rows should equal the total students across the five classes, and the number of columns should be exactly 2. For example, 2 students per class should give 10 2. A different count would mean a class was left out or counted twice.
+
