@@ -1,0 +1,163 @@
+---
+title: "Rexercise-9"
+author: "Renzel john Dongon"
+date: "2026-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Part A — Creating Data Frames
+
+#Question #1
+#a
+```{r}
+shoe_data <- data.frame(
+  shoe_size = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 10.5,
+                13.0, 11.5, 8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5, 10.5, 11.0, 9.0, 13.0),
+  height = c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0, 72.0, 64.0, 74.5, 67.0, 71.0, 71.0,
+             77.0, 72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0, 72.0, 70.0, 69.0, 70.0),
+  gender = c("F", "F", "F", "F", "M", "F", "F", "F", "M", "F", "M", "F", "M", "M",
+             "M", "M", "F", "F", "M", "F", "F", "M", "M", "F", "M", "M", "M", "M")
+)
+
+write.csv(shoe_data, "shoesize.csv", row.names = FALSE)
+
+shoe_import <- read.csv("shoesize.csv")
+tail(shoe_import, 5)
+```
+
+#b
+```{r}
+shoe_import <- read.csv("shoesize.csv")
+tail(shoe_import, 5)
+```
+
+#c
+```{r}
+str(shoe_import)
+head(shoe_import)
+```
+
+#d
+```{r}
+dim(shoe_import)
+nrow(shoe_import)
+ncol(shoe_import)
+```
+
+
+#e
+```{r}
+summary(shoe_import)
+```
+
+
+#f
+```{r}
+males <- subset(shoe_import, gender == "M", select = c(shoe_size, height))
+females <- subset(shoe_import, gender == "F", select = c(shoe_size, height))
+
+males
+females
+```
+
+#g
+```{r}
+mean(shoe_import$shoe_size)
+mean(shoe_import$height)
+```
+
+#h
+```{r}
+cor(shoe_import$shoe_size, shoe_import$height)
+
+plot(shoe_import$shoe_size, shoe_import$height,
+     xlab = "Shoe Size", ylab = "Height",
+     main = "Shoe Size vs Height")
+abline(lm(height ~ shoe_size, data = shoe_import))
+```
+
+#Question #2
+```{r}
+shoe_import$gender <- factor(shoe_import$gender)
+
+shoe_import$gender
+levels(shoe_import$gender)
+str(shoe_import)
+```
+
+The gender column was converted into a factor with two levels, F and M. Since gender is a nominal variable, the levels have no order, and neither one is worth more than the other.
+
+#Question #3
+R Markdown uses the folder containing the .Rmd file as the working directory, so relative file paths like "shoesize.csv" always point to the same place, no matter what folder the R console was in. When the file is shared with someone else, they can open it from any computer, and the import will still work as long as the data file is in the same folder. This makes the document reproducible, because it does not depend on one person's own folder setup.
+
+
+#Question #4
+```{r}
+shoe_import <- read.csv("shoesize.csv")
+str(shoe_import)
+```
+
+R assigned the gender column the type character (chr), which is what I expected because gender is text made of letters. If a numeric column like shoe_size was accidentally imported as character because of a stray non-numeric value, calculations such as mean(), sum(), and cor() would fail or give wrong results. Sorting would also use alphabetical order instead of numeric order, so "10.5" would come before "9.0".
+
+#Question #5
+```{r}
+head(shoe_import)
+tail(shoe_import)
+```
+
+Checking both head() and tail() is good practice because head() only shows the first rows, while problems often appear at the end of a file. For example, extra blank rows, a stray footer or note, or a row with a missing or misplaced value at the bottom would not show up in head() alone. tail() confirms that the whole file was imported correctly, including the last rows.
+
+#Question #6
+#a
+```{r}
+cor(shoe_import$shoe_size, shoe_import$height)
+```
+The correlation between shoe size and height across all 28 observations is about 0.78, which is a strong positive relationship.
+
+#b
+```{r}
+shoe_import[shoe_import$shoe_size >= 11, ]
+```
+Six respondents have a shoe size of 11 or higher, and all of them are male.
+
+#Question #7
+```{r}
+mean(females$shoe_size)
+mean(females$height)
+mean(males$shoe_size)
+mean(males$height)
+
+# optional: correlation within each group
+cor(females$shoe_size, females$height)
+cor(males$shoe_size, males$height)
+```
+
+The males have a higher mean shoe size (about 10.96) and a higher mean height (about 71.46) than the females (about 7.86 and 65.68). This shows a pattern where the group with bigger shoe sizes is also taller.
+
+Yes, the dataset supports a relationship within each gender group, since the correlation inside each group is positive (about 0.5). But it is weaker than the overall 0.78, which means gender is an important factor that must be accounted for separately. Part of the overall relationship comes from the males being both taller and having bigger feet.
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
