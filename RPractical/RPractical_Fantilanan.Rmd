@@ -1,0 +1,322 @@
+---
+title: "RPractical_Fantilanan"
+author: "Glen Mark F. Fantilanan"
+date: "2026-11-11"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Practical
+
+```{r}
+#A1
+
+v <- seq(5, 50, by = 5)
+length(v)   # 10
+sum(v)      # 275
+mean(v)     # 27.5
+
+```
+
+```{r}
+#A2
+
+w <- rep(c(1, 2, 3), times = 4)
+z <- rep(c(1, 2, 3), each = 4)
+print(w)    # 1 2 3 1 2 3 1 2 3 1 2 3
+print(z)    # 1 1 1 1 2 2 2 2 3 3 3 3
+
+```
+
+```{r}
+#A3
+
+17 %% 5        # 2   (remainder)
+17 %/% 5       # 3   (integer division)
+2^10           # 1024
+sqrt(144)      # 12
+round(pi, 3)   # 3.142
+
+```
+
+```{r}
+#A4
+
+a <- c(2, 4, 6, 8)
+b <- c(1, 3, 5, 7)
+
+a + b          # 3 7 11 15
+a * b          # 2 12 30 56
+a > b          # TRUE TRUE TRUE TRUE
+sum(a * b)     # 100
+
+```
+
+```{r}
+#A5
+
+paste("Student", 1:3, sep = "-")
+# "Student-1" "Student-2" "Student-3"
+
+class(42)      # "numeric"
+class(42L)     # "integer"
+class("42")    # "character"
+class(41i)     # "complex"
+class(TRUE)    # "logical"
+
+```
+
+```{r}
+#B1
+
+students <- data.frame(
+  id         = 1:8,
+  name       = c("Alice", "Bruno", "Chen", "Dana", "Elif", "Farid", "Grace", "Hiro"),
+  sex        = c("F", "M", "M", "F", "F", "M", "F", "M"),
+  section    = c("A", "B", "A", "C", "B", "C", "A", "B"),
+  midterm    = c(78, 85, 92, 67, 74, 88, 95, 59),
+  final      = c(82, 79, 96, 71, 80, 91, 93, 65),
+  attendance = c(95, 88, 100, 72, 90, 85, 98, 60),
+  stringsAsFactors = FALSE
+)
+
+```
+
+```{r}
+#B2
+
+str(students)
+dim(students)     # 8 7
+names(students)   # "id" "name" "sex" "section" "midterm" "final" "attendance"
+summary(students)
+
+```
+
+```{r}
+#B3
+
+students$average <- round((students$midterm + students$final) / 2, 1)
+students$average
+# 80.0 82.0 94.0 69.0 77.0 89.5 94.0 62.0
+
+```
+
+```{r}
+#B4
+
+students$passed <- students$average >= 70 & students$attendance >= 75
+students$passed
+# TRUE TRUE TRUE FALSE TRUE TRUE TRUE FALSE
+
+```
+
+```{r}
+#B5
+
+students$standing <- ifelse(students$average >= 90, "Honors",
+                     ifelse(students$average >= 75, "Good", "Needs Support"))
+students[, c("name", "average", "standing")]
+
+```
+
+```{r}
+#B6
+
+classify <- function(score) {
+  if (score >= 85) {
+    "Distinction"
+  } else if (score >= 70) {
+    "Merit"
+  } else if (score >= 50) {
+    "Pass"
+  } else {
+    "Fail"
+  }
+}
+
+result <- sapply(c(90, 73, 55, 40), classify)
+print(result)
+# [1] "Distinction" "Merit"       "Pass"        "Fail"
+
+```
+
+```{r}
+#C1
+
+new_students <- data.frame(
+  id         = c(9, 10),
+  name       = c("Ines", "Jamal"),
+  sex        = c("F", "M"),
+  section    = c("C", "A"),
+  midterm    = c(81, 70),
+  final      = c(84, 68),
+  attendance = c(92, 80),
+  stringsAsFactors = FALSE
+)
+
+new_students$average  <- round((new_students$midterm + new_students$final) / 2, 1)
+new_students$passed   <- new_students$average >= 70 & new_students$attendance >= 75
+new_students$standing <- ifelse(new_students$average >= 90, "Honors",
+                         ifelse(new_students$average >= 75, "Good", "Needs Support"))
+
+students_all <- rbind(students, new_students)
+students_all[9:10, c("name", "average", "passed", "standing")]
+
+```
+
+```{r}
+#C2
+
+quiz <- c(8, 7, 10, 6, 7, 9, 10, 5, 8, 6)
+students_all <- cbind(students_all, quiz = quiz)
+class(students_all)   # "data.frame"
+
+```
+
+```{r}
+#C3
+
+m <- cbind(midterm = students_all$midterm, final = students_all$final)
+m <- rbind(m, mean = colMeans(m))
+m
+
+```
+
+```{r}
+#C4
+
+# rbind() stacks data frames on top of each other, but the column names have to
+# match. If they don't, R gives an error: "names do not match previous names".
+# The assignment says 2-3 sentences, so I used tryCatch() to catch the error
+# so the code doesn't crash and just prints a message instead.
+
+bad <- new_students
+names(bad)[2] <- "student_name"   # changed "name" to "student_name" so it doesn't match students
+
+tryCatch(rbind(students, bad),
+         error = function(e) {
+           message("rbind failed: ", conditionMessage(e))
+           NULL
+         })
+
+# Output:
+# rbind failed: names do not match previous names
+# NULL
+
+```
+
+```{r}
+#D1
+
+students_all$name
+students_all[["name"]]
+students_all[, "name"]
+# all three: "Alice" "Bruno" "Chen" "Dana" "Elif" "Farid" "Grace" "Hiro" "Ines" "Jamal"
+
+```
+
+```{r}
+#D2
+
+students_all[2:5, c("name", "midterm", "final")]
+
+```
+
+```{r}
+#D3
+
+students_all[students_all$attendance > 90, ]
+
+```
+
+```{r}
+#D4
+
+subset(students_all,
+       sex == "F" & section %in% c("A", "C") & final >= 75,
+       select = c(name, section, final))
+
+```
+
+```{r}
+#D5
+
+students_all$name[which.max(students_all$average)]   # "Chen"
+students_all$name[which.min(students_all$average)]   # "Hiro"
+
+```
+
+```{r}
+#D6
+
+sorted <- students_all[order(-students_all$average), ]
+head(sorted, 3)
+
+```
+
+```{r}
+#E1
+
+students_all$section <- factor(students_all$section)
+students_all$sex     <- factor(students_all$sex)
+
+levels(students_all$sex)       # "F" "M"
+levels(students_all$section)   # "A" "B" "C"
+
+```
+
+```{r}
+#E2
+
+table(students_all$sex)
+# F M
+# 5 5
+
+table(students_all$section)
+# A B C
+# 4 3 3
+
+table(students_all$sex, students_all$section)
+
+```
+
+```{r}
+#E3
+
+as.integer(students_all$sex)
+# 1 2 2 1 1 2 1 2 1 2
+
+# The integers are the codes R uses to store the factor. R doesn't keep "F" and "M"
+# as text, it saves them as numbers and keeps a list of levels to match them to.
+# Level 1 is "F" and level 2 is "M" (alphabetical order), so 1 = F and 2 = M.
+# For example, Alice is F so she gets 1 and Bruno is M so he gets 2.
+
+```
+
+```{r}
+#E4
+
+students_all$sex_label <- factor(students_all$sex,
+                                 levels = c("F", "M"),
+                                 labels = c("Female", "Male"))
+levels(students_all$sex_label)   # "Female" "Male"
+
+```
+
+```{r}
+#E5
+
+summary(students_all$sex_label)
+# Female   Male
+#      5      5
+
+mean(students_all$average[students_all$sex_label == "Female"])   # 80.5
+mean(students_all$average[students_all$sex_label == "Male"])     # 79.3
+
+```
+
