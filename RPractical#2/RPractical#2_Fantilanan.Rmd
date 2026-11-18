@@ -1,0 +1,181 @@
+---
+title: "RPractical#2_Fantilanan"
+author: "Glen Mark F. Fantilanan"
+date: "2026-11-18"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+emp_df <- read.csv("employees.csv", stringsAsFactors = FALSE)
+```
+
+```{r}
+str(emp_df)
+head(emp_df, 5)
+summary(emp_df)
+```
+
+```{r}
+cat("Rows:", nrow(emp_df), "\n")
+cat("Columns:", ncol(emp_df), "\n")
+sapply(emp_df, class)
+```
+
+```{r}
+mean(emp_df$salary, na.rm = TRUE)
+max(emp_df$age, na.rm = TRUE)
+table(emp_df$department)
+```
+
+```{r}
+new_hires <- data.frame(
+  emp_id = c(21, 22, 23),
+  name = c("Uma", "Victor", "Wen"),
+  department = c("HR", "IT", "Sales"),
+  sex = c("F", "M", "F"),
+  age = c(28, 37, 33),
+  salary = c(45000, 83000, 60000),
+  years_service = c(2, 9, 6),
+  rating = c(3, 4, 5),
+  stringsAsFactors = FALSE
+)
+new_hires
+```
+
+```{r}
+emp_df <- rbind(emp_df, new_hires)
+dim(emp_df)
+```
+
+```{r}
+emp_df$bonus <- round(emp_df$salary * 0.05)
+head(emp_df)
+tail(emp_df)
+```
+
+```{r}
+# C1: first 5 rows, columns name and salary
+emp_df[1:5, c("name", "salary")]
+```
+
+```{r}
+# C2: salary greater than 70000 (logical subsetting)
+emp_df[emp_df$salary > 70000, ]
+```
+
+```{r}
+# C3: IT department, years_service >= 5, only 3 columns
+subset(emp_df,
+       department == "IT" & years_service >= 5,
+       select = c(name, years_service, salary))
+```
+
+```{r}
+# C4: row numbers of employees older than 50, then their names
+older_rows <- which(emp_df$age > 50)
+older_rows
+emp_df$name[older_rows]
+```
+
+```{r}
+# C5: remove emp_id and bonus with negative indexing (emp_df not overwritten)
+drop_cols <- which(names(emp_df) %in% c("emp_id", "bonus"))
+head(emp_df[, -drop_cols], 3)
+```
+
+```{r}
+# C6: salary of the employee named Mia
+emp_df$salary[emp_df$name == "Mia"]
+```
+
+```{r}
+# D1: convert to factors and print levels
+emp_df$department <- factor(emp_df$department)
+emp_df$sex <- factor(emp_df$sex)
+levels(emp_df$department)
+levels(emp_df$sex)
+```
+
+```{r}
+# D2: one-way and two-way tables
+table(emp_df$department)
+table(emp_df$department, emp_df$sex)
+```
+
+```{r}
+# D3: ordered factor for rating
+emp_df$rating_level <- factor(emp_df$rating,
+                              levels = 1:5,
+                              labels = c("Poor", "Fair", "Good", "Very Good", "Excellent"),
+                              ordered = TRUE)
+table(emp_df$rating_level)
+```
+
+```{r}
+# D4: mean salary per department using a for loop
+for (d in levels(emp_df$department)) {
+  avg <- mean(emp_df$salary[emp_df$department == d], na.rm = TRUE)
+  cat(d, ":", round(avg), "\n")
+}
+```
+
+```{r}
+# E1: nested ifelse for salary_band
+emp_df$salary_band <- ifelse(emp_df$salary >= 70000, "High",
+                      ifelse(emp_df$salary >= 50000, "Medium", "Low"))
+table(emp_df$salary_band)
+```
+
+```{r}
+# E2: Senior / Junior
+emp_df$level <- ifelse(emp_df$years_service >= 8, "Senior", "Junior")
+table(emp_df$level)
+```
+
+```{r}
+# E3: raise_pct function, applied with sapply
+raise_pct <- function(rating) {
+  if (rating == 5) {
+    0.10
+  } else if (rating == 4) {
+    0.07
+  } else if (rating == 3) {
+    0.04
+  } else {
+    0
+  }
+}
+
+emp_df$raise <- sapply(emp_df$rating, raise_pct)
+emp_df$new_salary <- round(emp_df$salary * (1 + emp_df$raise))
+head(emp_df[, c("name", "rating", "raise", "new_salary")], 5)
+```
+
+```{r}
+# E4: budget check with if / else
+total <- sum(emp_df$new_salary)
+if (total < 1600000) {
+  print("Budget OK")
+} else {
+  print("Over budget")
+}
+total
+```
+
+```{r}
+# F1: sort() for top 5 salaries and first 5 names alphabetically
+head(sort(emp_df$salary, decreasing = TRUE), 5)
+head(sort(emp_df$name), 5)
+```
+
+```{r}
+# F2: order() by salary descending
+by_salary <- emp_df[order(emp_df$salary, decreasing = TRUE), ]
+head(by_salary[, c("name", "department", "salary")], 5)
+```
