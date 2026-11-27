@@ -1,0 +1,6 @@
+"StudentID","Name","Section","Quiz","Midterm","Final","Attendance","FinalGrade","Result","Remarks","AttendanceFlag","Honors","Scholarship"
+2026001,"Maria Santos","A",92,94,95,98,93.8,"Passed","Excellent","OK","Yes","Partial"
+2026003,"Angela Reyes","B",85,88,90,96,87.9,"Passed","Very Good","OK","No","Partial"
+2026005,"Kristine Lopez","C",95,93,96,99,94.8,"Passed","Excellent","OK","Yes","Partial"
+2026009,"Liza Ramos","A",90,91,93,93,91.5,"Passed","Excellent","OK","Yes","Partial"
+2026015,"Sofia Domingo","C",97,95,98,91,96.8,"Passed","Excellent","OK","Yes","Full"
